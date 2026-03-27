@@ -1,5 +1,5 @@
 package com.rideapp.ride_app_backend.auth.security;
-import com.rideapp.ride_app_backend.auth.repository.UserRepository;
+import com.rideapp.ride_app_backend.user.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;

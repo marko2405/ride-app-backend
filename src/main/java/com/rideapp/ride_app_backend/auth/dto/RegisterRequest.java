@@ -1,22 +1,30 @@
 package com.rideapp.ride_app_backend.auth.dto;
 
+import com.rideapp.ride_app_backend.common.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class RegisterRequest {
-    @Email
-    @NotBlank
+
+    @NotBlank(message = "First name is required.")
+    private String firstName;
+
+    @NotBlank(message = "Last name is required.")
+    private String lastName;
+
+    @Email(message = "Email is not valid.")
+    @NotBlank(message = "Email is required.")
     private String email;
 
-    @NotBlank @Size(min=3, max=40)
+    @NotBlank(message = "Username is required.")
     private String username;
 
-    @NotBlank
-    @Size(min=6, max=72)
+    @NotBlank(message = "Password is required.")
     private String password;
 
-    private String desiredRole;
+    @NotNull(message = "Role is required.")
+    private Role role;
 }
