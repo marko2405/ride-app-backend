@@ -31,6 +31,9 @@ public class RideResponse {
     private LocalDateTime scheduledFor;
     private Long passengerId;
     private Long driverId;
+    private PassengerInfoResponse passengerInfo;
+    private DriverInfoResponse driverInfo;
+    private VehicleInfoResponse vehicleInfo;
     private Instant createdAt;
     private Instant updatedAt;
 }

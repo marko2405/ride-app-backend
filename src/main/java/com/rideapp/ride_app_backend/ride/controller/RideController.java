@@ -39,8 +39,8 @@ public class RideController {
     }
 
     @GetMapping("/available")
-    public List<RideResponse> getAvailableRides() {
-        return rideService.getAvailableRides();
+    public List<RideResponse> getAvailableRides(Authentication authentication) {
+        return rideService.getAvailableRides(authentication.getName());
     }
 
     @GetMapping("/{rideId}")

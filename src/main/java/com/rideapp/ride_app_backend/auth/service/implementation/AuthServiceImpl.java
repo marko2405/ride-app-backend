@@ -45,6 +45,10 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("Admin cannot be registered publicly");
         }
 
+        if (request.getRole() == Role.DRIVER) {
+            validateDriverRegistrationFields(request);
+        }
+
         User user = new User();
         user.setFirstName(firstName);
         user.setLastName(lastName);
@@ -60,9 +64,17 @@ public class AuthServiceImpl implements AuthService {
         if (savedUser.getRole() == Role.DRIVER) {
             DriverProfile driverProfile = DriverProfile.builder()
                     .user(savedUser)
+                    .licenseNumber(request.getLicenseNumber())
+                    .yearsOfExperience(request.getYearsOfExperience())
                     .active(true)
                     .averageRating(0.0)
                     .totalRatings(0)
+                    .vehicleClass(request.getVehicleClass())
+                    .carBrand(request.getCarBrand())
+                    .carModel(request.getCarModel())
+                    .carColor(request.getCarColor())
+                    .plateNumber(request.getPlateNumber())
+                    .seats(request.getSeats())
                     .build();
 
             driverProfileRepository.save(driverProfile);
@@ -130,5 +142,30 @@ public class AuthServiceImpl implements AuthService {
             return null;
         }
         return email.trim().toLowerCase();
+    }
+    private void validateDriverRegistrationFields(RegisterRequest request) {
+        if (request.getVehicleClass() == null) {
+            throw new IllegalArgumentException("Vehicle class is required for driver registration");
+        }
+
+        if (request.getCarBrand() == null || request.getCarBrand().trim().isBlank()) {
+            throw new IllegalArgumentException("Car brand is required for driver registration");
+        }
+
+        if (request.getCarModel() == null || request.getCarModel().trim().isBlank()) {
+            throw new IllegalArgumentException("Car model is required for driver registration");
+        }
+
+        if (request.getCarColor() == null || request.getCarColor().trim().isBlank()) {
+            throw new IllegalArgumentException("Car color is required for driver registration");
+        }
+
+        if (request.getPlateNumber() == null || request.getPlateNumber().trim().isBlank()) {
+            throw new IllegalArgumentException("Plate number is required for driver registration");
+        }
+
+        if (request.getSeats() == null || request.getSeats() < 1) {
+            throw new IllegalArgumentException("Seats must be greater than 0");
+        }
     }
 }

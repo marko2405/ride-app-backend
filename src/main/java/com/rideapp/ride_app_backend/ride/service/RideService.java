@@ -12,7 +12,7 @@ public interface RideService {
 
     RideResponse getRideById(Long rideId, String userEmail);
 
-    List<RideResponse> getAvailableRides();
+    List<RideResponse> getAvailableRides(String userEmail);
 
     List<RideResponse> getMyDriverRides(String userEmail);
 

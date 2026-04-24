@@ -75,6 +75,17 @@ public class ProfileServiceImpl implements ProfileService {
         driverProfile.setLicenseNumber(request.getLicenseNumber());
         driverProfile.setYearsOfExperience(request.getYearsOfExperience());
 
+        driverProfile.setVehicleClass(request.getVehicleClass());
+        driverProfile.setCarBrand(request.getCarBrand());
+        driverProfile.setCarModel(request.getCarModel());
+        driverProfile.setCarColor(request.getCarColor());
+        driverProfile.setPlateNumber(request.getPlateNumber());
+        driverProfile.setSeats(request.getSeats());
+
+        if (request.getActive() != null) {
+            driverProfile.setActive(request.getActive());
+        }
+
         DriverProfile savedDriverProfile = driverProfileRepository.save(driverProfile);
 
         return mapToDriverProfileResponse(user, savedDriverProfile);
@@ -105,11 +116,20 @@ public class ProfileServiceImpl implements ProfileService {
                 .lastName(user.getLastName())
                 .email(user.getEmail())
                 .username(user.getUsername())
+
                 .licenseNumber(driverProfile.getLicenseNumber())
                 .yearsOfExperience(driverProfile.getYearsOfExperience())
                 .active(driverProfile.getActive())
                 .averageRating(driverProfile.getAverageRating())
                 .totalRatings(driverProfile.getTotalRatings())
+
+                .vehicleClass(driverProfile.getVehicleClass())
+                .carBrand(driverProfile.getCarBrand())
+                .carModel(driverProfile.getCarModel())
+                .carColor(driverProfile.getCarColor())
+                .plateNumber(driverProfile.getPlateNumber())
+                .seats(driverProfile.getSeats())
+
                 .build();
     }
 }

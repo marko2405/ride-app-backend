@@ -1,5 +1,6 @@
 package com.rideapp.ride_app_backend.user.entity;
 
+import com.rideapp.ride_app_backend.common.enums.VehicleClass;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,4 +35,23 @@ public class DriverProfile {
 
     @Column(name = "total_ratings", nullable = false)
     private Integer totalRatings = 0;
+    @Enumerated(EnumType.STRING)
+
+    @Column(name = "vehicle_class")
+    private VehicleClass vehicleClass;
+
+    @Column(name = "car_brand", length = 50)
+    private String carBrand;
+
+    @Column(name = "car_model", length = 50)
+    private String carModel;
+
+    @Column(name = "car_color", length = 30)
+    private String carColor;
+
+    @Column(name = "plate_number", length = 20, unique = true)
+    private String plateNumber;
+
+    @Column(name = "seats")
+    private Integer seats;
 }
