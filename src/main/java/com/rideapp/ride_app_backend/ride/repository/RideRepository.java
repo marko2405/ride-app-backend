@@ -1,4 +1,5 @@
 package com.rideapp.ride_app_backend.ride.repository;
+
 import com.rideapp.ride_app_backend.common.enums.RideStatus;
 import com.rideapp.ride_app_backend.common.enums.VehicleClass;
 import com.rideapp.ride_app_backend.ride.entity.Ride;
@@ -18,4 +19,8 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
     );
 
     List<Ride> findByDriverIdOrderByCreatedAtDesc(Long driverId);
+
+    long countByStatus(RideStatus status);
+
+    long countByVehicleClass(VehicleClass vehicleClass);
 }

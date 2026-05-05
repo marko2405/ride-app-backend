@@ -1,9 +1,11 @@
 package com.rideapp.ride_app_backend.user.repository;
 
 
+import com.rideapp.ride_app_backend.common.enums.Role;
 import com.rideapp.ride_app_backend.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -15,4 +17,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);
 
     boolean existsByUsername(String username);
+
+    long countByRole(Role role);
+
+    long countByEnabled(Boolean enabled);
+
+    List<User> findByRoleOrderByCreatedAtDesc(Role role);
+
+    List<User> findAllByOrderByCreatedAtDesc();
 }

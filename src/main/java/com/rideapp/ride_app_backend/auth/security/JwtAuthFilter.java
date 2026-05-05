@@ -23,6 +23,13 @@ public class JwtAuthFilter extends GenericFilter {
             throws IOException, ServletException {
 
         HttpServletRequest request = (HttpServletRequest) req;
+
+        String path = request.getServletPath();
+
+        if (path.startsWith("/api/auth/")) {
+            chain.doFilter(req, res);
+            return;
+        }
         String auth = request.getHeader("Authorization");
 
         if (auth != null && auth.startsWith("Bearer ")) {
