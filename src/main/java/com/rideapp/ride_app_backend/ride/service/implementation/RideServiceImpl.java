@@ -39,9 +39,9 @@ public class RideServiceImpl implements RideService {
     @Override
     @Transactional
     public RideResponse createRide(CreateRideRequest request, String userEmail) {
+        validateRideAddresses(request);
         User passenger = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND ));
-
         RideQuoteRequest quoteRequest = new RideQuoteRequest();
         quoteRequest.setPickupLat(request.getPickupLat());
         quoteRequest.setPickupLng(request.getPickupLng());
@@ -59,8 +59,10 @@ public class RideServiceImpl implements RideService {
         Ride ride = new Ride();
         ride.setPickupLat(request.getPickupLat());
         ride.setPickupLng(request.getPickupLng());
+        ride.setPickupAddress(request.getPickupAddress());
         ride.setDropoffLat(request.getDropoffLat());
         ride.setDropoffLng(request.getDropoffLng());
+        ride.setDropoffAddress(request.getDropoffAddress());
         ride.setVehicleClass(request.getVehicleClass());
         ride.setStatus(RideStatus.REQUESTED);
         ride.setDistanceMeters(quoteResponse.getDistanceMeters());
@@ -312,8 +314,10 @@ public class RideServiceImpl implements RideService {
                 ride.getId(),
                 ride.getPickupLat(),
                 ride.getPickupLng(),
+                ride.getPickupAddress(),
                 ride.getDropoffLat(),
                 ride.getDropoffLng(),
+                ride.getDropoffAddress(),
                 ride.getVehicleClass(),
                 ride.getStatus(),
                 ride.getDistanceMeters(),
@@ -342,5 +346,14 @@ public class RideServiceImpl implements RideService {
     private Double getAverageRating(Long userId) {
         BigDecimal avg = rideRatingRepository.findAverageRatingByUserId(userId);
         return avg != null ? avg.doubleValue() : 0.0;
+    }
+    private void validateRideAddresses(CreateRideRequest request) {
+        if (request.getPickupAddress() == null || request.getPickupAddress().isBlank()) {
+            throw new IllegalStateException("Pickup address is required");
+        }
+
+        if (request.getDropoffAddress() == null || request.getDropoffAddress().isBlank()) {
+            throw new IllegalStateException("Dropoff address is required");
+        }
     }
 }

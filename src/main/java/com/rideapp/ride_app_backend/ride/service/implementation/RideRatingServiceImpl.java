@@ -18,7 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.rideapp.ride_app_backend.user.entity.DriverProfile;
+import com.rideapp.ride_app_backend.user.repository.DriverProfileRepository;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.LinkedHashMap;
@@ -32,6 +33,7 @@ public class RideRatingServiceImpl implements RideRatingService {
     private final RideRatingRepository rideRatingRepository;
     private final RideRepository rideRepository;
     private final UserRepository userRepository;
+    private final DriverProfileRepository driverProfileRepository;
 
     @Override
     @Transactional
@@ -89,7 +91,11 @@ public class RideRatingServiceImpl implements RideRatingService {
         rideRating.setRatingType(ratingType);
         rideRating.setScore(request.getScore());
 
-        RideRating savedRating = rideRatingRepository.save(rideRating);
+        RideRating savedRating = rideRatingRepository.saveAndFlush(rideRating);
+
+        if (ratingType == RatingType.PASSENGER_TO_DRIVER) {
+            updateDriverProfileRating(toUser.getId());
+        }
 
         return mapToResponse(savedRating);
     }
@@ -170,5 +176,29 @@ public class RideRatingServiceImpl implements RideRatingService {
                 rideRating.getScore(),
                 rideRating.getCreatedAt()
         );
+    }
+
+    private void updateDriverProfileRating(Long driverUserId) {
+        DriverProfile driverProfile = driverProfileRepository.findByUserId(driverUserId)
+                .orElseThrow(() -> new EntityNotFoundException("Driver profile not found"));
+
+        BigDecimal averageRating = rideRatingRepository.findAverageRatingByUserIdAndRatingType(
+                driverUserId,
+                RatingType.PASSENGER_TO_DRIVER
+        );
+
+        long totalRatings = rideRatingRepository.countByToUserIdAndRatingType(
+                driverUserId,
+                RatingType.PASSENGER_TO_DRIVER
+        );
+
+        double roundedAverage = averageRating == null
+                ? 0.0
+                : averageRating.setScale(2, RoundingMode.HALF_UP).doubleValue();
+
+        driverProfile.setAverageRating(roundedAverage);
+        driverProfile.setTotalRatings(Math.toIntExact(totalRatings));
+
+        driverProfileRepository.save(driverProfile);
     }
 }

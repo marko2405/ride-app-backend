@@ -18,8 +18,10 @@ public class RideResponse {
     private Long id;
     private Double pickupLat;
     private Double pickupLng;
+    private String pickupAddress;
     private Double dropoffLat;
     private Double dropoffLng;
+    private String dropoffAddress;
     private VehicleClass vehicleClass;
     private RideStatus status;
     private Long distanceMeters;

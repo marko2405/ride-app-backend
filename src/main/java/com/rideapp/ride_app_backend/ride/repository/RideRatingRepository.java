@@ -4,6 +4,7 @@ import com.rideapp.ride_app_backend.common.enums.RatingType;
 import com.rideapp.ride_app_backend.ride.entity.RideRating;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,9 +24,17 @@ public interface RideRatingRepository extends JpaRepository<RideRating, Long> {
     List<RideRating> findByToUserIdOrderByCreatedAtDesc(Long toUserId);
 
     @Query("select avg(rr.score) from RideRating rr where rr.toUser.id = :userId")
-    BigDecimal findAverageRatingByUserId(Long userId);
+    BigDecimal findAverageRatingByUserId(@Param("userId") Long userId);
 
     long countByToUserId(Long userId);
 
     long countByToUserIdAndScore(Long userId, Integer score);
+
+    @Query("select avg(rr.score) from RideRating rr where rr.toUser.id = :userId and rr.ratingType = :ratingType")
+    BigDecimal findAverageRatingByUserIdAndRatingType(
+            @Param("userId") Long userId,
+            @Param("ratingType") RatingType ratingType
+    );
+
+    long countByToUserIdAndRatingType(Long userId, RatingType ratingType);
 }

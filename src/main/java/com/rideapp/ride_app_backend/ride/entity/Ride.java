@@ -33,6 +33,12 @@ public class Ride {
     @Column(name = "dropoff_lng", nullable = false)
     private Double dropoffLng;
 
+    @Column(name = "pickup_address")
+    private String pickupAddress;
+
+    @Column(name = "dropoff_address")
+    private String dropoffAddress;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "vehicle_class", nullable = false, length = 20)
     private VehicleClass vehicleClass;
